@@ -1,0 +1,26 @@
+graph TB
+    A[Discord Server<br/>日記用サーバー] -->|Discord Botが<br/>自動収集<br/>DB起動時に更新| B[Knowledge DB<br/>PostgreSQL 17 + pgvector]
+
+    A -->|日常会話から個性を収集| A1["• ポケモンが好き<br/>• 宝塚歌劇が好き<br/>• プラズマ物理を研究<br/>• ル=グウィンが好き<br/>• 実家で犬を飼っている"]
+
+    B -->|124レコード蓄積<br/>2025年11月時点| B1["• ユーザーごとの過去発言を蓄積<br/>• DB登録時に<br/>  OpenAI Embeddingsで<br/>  1536次元ベクトル化<br/>• source/author等で検索可能"]
+
+    B -->|RAG検索<br/>セマンティック検索| C[YouTube Live配信]
+
+    C --> C1[視聴者の質問:<br/>お芝居は好き？]
+    C1 --> C2["1. クエリ拡張<br/>LLM: Gemini 2.0 Flash Exp<br/>JSONモード"]
+    C2 --> C3["質問 → 関連キーワード抽出<br/>お芝居は好き？<br/>→ お芝居, 演劇, 舞台, 俳優..."]
+    C3 --> C4["2. ベクトル検索<br/>OpenAI Embeddings<br/>1536次元ベクトル"]
+    C4 --> C5["類似度閾値以上の候補を取得<br/>環境変数で調整可能<br/>候補: 10件程度"]
+    C5 --> C6["3. トピック選択<br/>LLM: Gemini 2.0 Flash Lite<br/>JSONモード"]
+    C6 --> C7["候補から関連度の高い話題を選択<br/>選択結果: 1-3件<br/>例: 宝塚歌劇の記録"]
+    C7 --> C8["4. LLM応答生成<br/>Claude 3.5 Sonnet"]
+    C8 --> C9["システムプロンプトに<br/>選択された記録を注入<br/>パーソナライズ応答を生成"]
+    C9 --> C10["5. TTS音声合成<br/>ElevenLabs"]
+    C10 --> C11["VRMアバターが<br/>リップシンクで喋る"]
+
+    style A fill:#e1f5ff
+    style B fill:#fff4e1
+    style C fill:#f0e1ff
+    style A1 fill:#e1f5ff
+    style B1 fill:#fff4e1
