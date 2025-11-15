@@ -44,56 +44,94 @@ Discord Botがメッセージを自動収集し（ただしリアルタイム収
 
 ### 3.3 技術スタック
 
-#### Discord統合
+#### 本プロジェクトで追加した実装
 
-- **Discord.js**: Discord API クライアント
-- **Node.js**: メッセージ収集・応答生成サービス
+YouTube Live配信とDiscord連携のために新規実装した機能：
 
-#### データベース・検索
+- **Discord連携（新規）**
+  - **Discord.js**: Discord API クライアント
+  - **機能**: Discordサーバーの投稿を自動収集してDB登録
+  - **処理タイミング**: DB起動時に未登録の投稿を一括同期
 
-- **PostgreSQL 17**: メインデータベース
-- **pgvector (v0.4.0)**: ベクトル検索拡張（Rustベース、高速）
-- **Drizzle ORM**: 型安全なデータベース操作
-- **HNSW インデックス**: 高速近似最近傍探索（16倍高速化）
+- **YouTube Live統合（新規）**
+  - **YouTube Data API v3**: ライブチャット取得
+  - **機能**: 視聴者コメントをリアルタイムでポーリング取得
 
-#### AI/ML
+- **配信統合（新規）**
+  - **OBS**: 配信ソフト + Browser Source連携
+  - **機能**: VRMアバターとチャット欄をYouTube Live配信に表示
 
-- **LLM**: OpenRouter経由でマルチプロバイダー対応
-  - Claude 3.5 Sonnet（推奨）
-  - GPT-4, Gemini等
-- **Embeddings**: OpenAI text-embedding-3-small
-  - 1536次元ベクトル
-  - コスト: $0.00002/1000トークン（激安）
+- **knowledge-dbサービス（新規）**
+  - **postsテーブル**: Discord投稿の知識ベース
+  - **RAG検索API**: ベクトル検索による関連知識の取得エンドポイント
+  - **クエリ拡張**: LLMで検索クエリを複数キーワードに展開
 
-#### VTuber配信
+#### AIRI本体から継承した技術基盤
 
-- **YouTube Data API v3**: ライブチャット取得
-- **VRM**: 3Dアバター表示
-- **TTS**: ElevenLabs（音声合成）
-- **OBS**: 配信ソフト + Browser Source
+フォーク元のAIRIプロジェクトから継承した既存実装：
+
+- **データベース・検索**
+  - **PostgreSQL 17**: メインデータベース
+  - **pgvector (v0.4.0)**: ベクトル検索拡張
+  - **Drizzle ORM**: 型安全なデータベース操作
+  - **HNSW インデックス**: 高速近似最近傍探索
+
+- **AI/ML**
+  - **LLM**: OpenRouter経由でマルチプロバイダー対応
+    - 応答生成: Gemini 2.5 Flash Lite
+    - クエリ拡張、トピック選択: Gemini 2.0 Flash Lite
+  - **Embeddings**: OpenAI text-embedding-3-small
+    - 1536次元ベクトル
+    - コスト: $0.00002/1000トークン（激安）
+
+- **VTuber表示**
+  - **VRM**: 3Dアバター表示（Three.js）
+  - **TTS**: ElevenLabs（音声合成）
+  - **stage-web**: ブラウザベースの配信UI
+
+- **既存Bot**
+  - **Telegram Bot**: ボイスチャット機能
 
 ### 3.4 既存インフラの活用
 
-**重要な設計判断**: 新規テーブル作成せず既存を活用
+**重要な設計判断**: 既存のDB構成を活用して新しいテーブルを追加
 
-AIRI本体の`memory_fragments`テーブルを流用：
+#### AIRI本体の会話記憶システム
 
-- 元々はTelegram Botの会話記憶用
-- `metadata`フィールド（JSONB）でプラットフォーム判別可能
-- 複数のベクトル次元に対応済み
+AIRI本体は元々、Telegram Botでの**会話記憶**のために`memory_fragments`テーブルを持っていました。このテーブルには以下の特徴があります：
 
-```typescript
-// packages/telegram-bot/src/db/schema.ts (既存)
-export const memoryFragmentsTable = pgTable('memory_fragments', {
-  id: uuid().primaryKey(),
-  content: text().notNull(),
-  category: text().notNull(),  // 'tech', 'hobby', 'game'等
-  metadata: jsonb().default({}), // { source: 'discord', authorId: '...' }
-  content_vector_1536: vector({ dimensions: 1536 }),
-  // ...
-})
-```
+- **用途**: ボイスチャット時にキャラクターに記憶を持たせる
+- **記憶の種類**: working（作業記憶）、short_term（短期記憶）、long_term（長期記憶）、muscle（筋肉記憶）
+- **カテゴリ**: chat（会話）、relationships（人間関係）、people（人物）、life（日常生活）等
+- **ベクトル検索**: 1536/1024/768次元の3種類に対応
 
-→ 開発期間短縮、インフラ構築不要
+#### 本プロジェクトでの拡張: knowledge-db
+
+本プロジェクトでは、`memory_fragments`とは別に、**Discordの投稿からレコードを登録する**ための新しいテーブル`posts`を追加しました：
+
+- **用途**: AI VTuberのキャラクター設定としての知識ベース
+- **データソース**: Discord投稿（筆者の手動入力）
+- **検索対象**: YouTube Live配信での応答生成時
+- **ベクトル検索**: 同じく1536/1024/768次元の3種類に対応
+
+#### 既存インフラを活用したメリット
+
+新しいテーブルを追加しましたが、**既存のDB構成をそのまま活用**できたため：
+
+1. **PostgreSQL + pgvector**: 既にセットアップ済み
+2. **Drizzle ORM**: 型安全なDB操作の仕組みが既にある
+3. **HNSWインデックス**: ベクトル検索の高速化手法が既知
+4. **複数のベクトル次元対応**: 1536/1024/768次元に対応済み
+
+→ **開発期間短縮、新規インフラ構築不要**
+
+#### 2つのテーブルの役割分担
+
+| テーブル | 用途 | データソース | 検索対象 |
+|---------|------|------------|---------|
+| `memory_fragments` | 会話記憶 | Telegramチャット履歴 | ボイスチャット時の応答生成 |
+| `posts` | 知識ベース | Discord投稿（手動入力） | YouTube Live配信での応答生成 |
+
+この設計により、**会話の記憶**（動的に変化する短期的な情報）と**キャラクター設定としての知識**（固定的な長期的な情報）を分離して管理できるようになりました。
 
 ---
