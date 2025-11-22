@@ -10,3 +10,4 @@ articles/*.pdf
 # LaTeX Build files
 build/*
 !build/airi-youtube-live-notrim.pdf
+build/

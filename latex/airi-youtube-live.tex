@@ -728,17 +728,14 @@ LLM（Gemini 2.0 Flash Lite）で候補を評価し、
 
 \subsubsection{話題の継続（反復的RAG検索）}
 
-\autoref{subsec:overview}で紹介した通り、応答内容で再度検索することで話題を深掘りします：
+\autoref{subsec:overview}で紹介した通り、応答内容で再度検索することで話題を深掘りします（\autoref{fig:iterative-search-flow}）。
 
-\begin{quote}
-「お芝居は好き？」
-  ↓ 第1回検索
-「宝塚歌劇が好き」
-  ↓ 第2回検索（「宝塚」で再検索）
-宝塚歌劇の「はいからさんが通る」の舞台化を観た
-  ↓ 第3回検索（「はいからさんが通る」で再検索）
-同作のアニメ映画への言及、大正時代への興味
-\end{quote}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/iterative-search-flow.pdf}
+  \caption{反復的RAG検索による話題の深掘り}
+  \label{fig:iterative-search-flow}
+\end{figure}
 
 ここで前回の応答に関連した話題をDBにクエリをする場合、
 当然ながら最初のトピックとして選ばれたレコードが
