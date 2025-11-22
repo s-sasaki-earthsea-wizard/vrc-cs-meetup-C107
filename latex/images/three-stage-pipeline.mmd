@@ -1,0 +1,33 @@
+flowchart TB
+    Q["質問: 「好きな動物は？」"]
+
+    subgraph Stage1["段階1: クエリ拡張"]
+        LLM1["LLM (Gemini 2.0 Flash Lite)<br/>JSON Mode"]
+        Keywords["拡張キーワード<br/>['動物', '犬', 'イヌ', '猫', 'ネコ', '鳥', '魚', ...]"]
+    end
+
+    subgraph Stage2["段階2: ベクトル検索 (緩和された閾値)"]
+        DB[("ナレッジDB<br/>pgvector HNSW")]
+        Candidates["候補群 (広く取得)<br/>・実家には犬がいる<br/>・北斗の拳が好き<br/>・ポケモンのダブルバトル<br/>...<br/>(false-positive許容)"]
+    end
+
+    subgraph Stage3["段階3: 再ランキング"]
+        LLM2["LLM (Gemini 2.0 Flash Lite)<br/>JSON Mode + 関連度評価"]
+        TopK["Top-K選択<br/>✓ '実家には犬がいる。16歳のヨークシャーテリア'"]
+    end
+
+    Q --> LLM1
+    LLM1 --> Keywords
+    Keywords --> DB
+    DB --> Candidates
+    Candidates --> LLM2
+    Q -.質問を参照.-> LLM2
+    LLM2 --> TopK
+
+    style Q fill:#f0e1ff
+    style Keywords fill:#e1f5ff
+    style Candidates fill:#fff4e1
+    style TopK fill:#e1ffe1
+    style Stage1 fill:#fafafa,stroke:#9370db,stroke-width:2px
+    style Stage2 fill:#fafafa,stroke:#4682b4,stroke-width:2px
+    style Stage3 fill:#fafafa,stroke:#32cd32,stroke-width:2px

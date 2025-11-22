@@ -1,0 +1,13 @@
+{
+  "theme": "neutral",
+  "themeVariables": {
+    "fontSize": "13px",
+    "fontFamily": "\"Noto Sans JP\", \"Hiragino Sans\", sans-serif"
+  },
+  "flowchart": {
+    "curve": "basis",
+    "nodeSpacing": 35,
+    "rankSpacing": 45,
+    "padding": 15
+  }
+}
