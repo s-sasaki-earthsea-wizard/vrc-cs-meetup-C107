@@ -1,0 +1,410 @@
+%%%%%%%%%%%
+% uplatex %
+%%%%%%%%%%%
+
+% ==== jlreq + jlreq-trimmarks で B5 / 3 mm 塗り足し付き ====
+\documentclass[b5paper,twocolumn]{jlreq}      % 和文組版用クラス（B5版・二段組）
+
+% trimmarks：トンボを描く
+% platex,dvipdfmx：Cloud LaTeX の uplatex+dvipdfmx に合わせる
+% bleed_margin：塗り足し幅（四辺とも 3 mm）
+% show={trimmarks,digital}：PDF に TrimBox/BleedBox を自動設定
+\ifdefined\notrimmarks
+  % トリムマークなし版：jlreq-trimmarksを読み込まない
+\else
+  % トリムマークあり版：jlreq-trimmarksを読み込む
+  \usepackage[
+    platex,dvipdfmx,
+    bleed_margin={top=3mm,bottom=3mm,fore-edge=3mm,gutter=3mm},
+    show   ={trimmarks,digital}
+  ]{jlreq-trimmarks}
+\fi
+
+
+
+
+% 2025-07-03 amsmathを追加
+\usepackage{amsmath}
+
+% ──────────── ここから OCG の直打ち ────────────
+\usepackage{xcolor}
+% ドキュメント開始時に「Memo」という OCG（Optional Content Group）を作成、
+% print 時に必ず非表示にする設定
+\AtBeginDocument{%
+  \special{pdf:optionalcontent create Memo << /PrintState /OFF >>}%
+}
+
+% 画面のみ表示のメモ用コマンド
+\newcommand{\printnote}[2][cyan!50]{%
+  \special{pdf:optionalcontent begin Memo}% Memo レイヤ開始
+    \textcolor{#1}{#2}% 好きな色でメモ
+  \special{pdf:optionalcontent end Memo}% Memo レイヤ終了
+}
+% ────────────────────────────────────
+
+
+
+
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\usepackage{ascmac}
+
+% fancyhdr でヘッダー／フッターをカスタマイズ
+\usepackage{fancyhdr}
+\fancypagestyle{myhead}{%
+  \fancyhf{}                                      
+  \fancyhead[L]{\footnotesize タイトル} 
+  \fancyhead[R]{\footnotesize \rightmark}         
+  \fancyfoot[C]{\thepage}                         
+  \renewcommand{\headrulewidth}{0.4pt}            
+}
+\pagestyle{myhead}
+
+\makeatletter
+% 番号なしで右ヘッダにセクション名だけを流す
+\renewcommand{\sectionmark}[1]{%
+  \markright{\thesection\hspace{1em}#1}
+}
+\makeatother
+
+% ── プリアンブル中，\usepackage{fancyhdr} や \makeatletter 周りのあとあたりに追加 ──
+\usepackage{titling}
+% デフォルトだと \droptitle=0pt なので，下にずれているぶんだけマイナスにします。
+% たとえば「標準位置から上に10mmずらす」なら：
+\setlength{\droptitle}{-10mm}
+% ────────────────────────────────────────────
+
+\usepackage{tabto}
+
+% 星付きセクションでも目次・ヘッダに登録するマクロ
+\usepackage{etoolbox}
+\newcommand{\sectstar}[1]{%
+  \phantomsection%
+  \section*{#1}%
+  \addcontentsline{toc}{section}{#1}%
+  \markright{#1}%
+}
+
+\newcommand{\columnauthor}[1]{%
+  \begin{flushright}
+    {\small 執筆：#1}%
+  \end{flushright}
+}
+
+\usepackage{float}
+\usepackage[export]{adjustbox}  % プリアンブルに追加（まだなら）
+\jlreqsetup{caption_align={center}} % {center,*left} とすると長い場合のみ左寄せ
+
+% 枠付き画像を一発で呼び出すマクロ
+\newcommand{\ImgFrame}[2][]{
+  \fbox{\includegraphics[width=#1,keepaspectratio]{#2}}
+}
+% 枠線と余白を好みで調整
+\setlength{\fboxrule}{0.1pt} % 線の太さ
+\setlength{\fboxsep}{0pt}    % 画像–枠の間
+
+% マクロにしておくと楽
+\newcommand{\framedimg}[2][]{%
+  \fbox{\includegraphics[#1]{#2}}%
+}
+
+\usepackage{xurl}
+
+
+
+
+
+\title{{\large タイトル} \\ \vspace{2mm} {サブタイトル}}
+\author{著者名 著}
+\date{YYYY年MM月DD日} % 発行日
+
+
+
+
+
+
+\begin{document}
+% ----裏表紙--------------------
+\clearpage              % 直前のページを終わらせる
+% \printnote{(裏表紙)}
+\thispagestyle{empty}   % ヘッダ・フッタ（ページ番号）を消す
+\null                  % なにもない本文（高さ 0 の箱）
+
+
+\newpage               % 次ページへ
+\pagenumbering{arabic}
+
+\newpage
+
+
+\maketitle
+
+% 目つぎに「タイトル」を入れるかどうか迷う
+% \phantomsection
+% \addcontentsline{toc}{section}{タイトル}
+
+\vspace{20mm}
+
+
+\sectstar{タイトル}
+
+ああああああああああああああああ \\
+いいいいいいいいいいいいいいいいい \\
+ううううううううううううううううう \\
+えええええええええええええええええ \\
+おおおおおおおおおおおおおおおおお \\
+かかかかかかかかかかかかかかかかか \\
+ききききききききききききききききき \\
+くくくくくくくくくくくくくくくくく \\
+けけけけけけけけけけけけけけけけけ \\
+こここここここここここここここここ \\
+さささささささささささささささささ \\
+ししししししししししししししししし \\
+すすすすすすすすすすすすすすすすす \\
+せせせせせせせせせせせせせせせせせ \\
+そそそそそそそそそそそそそそそそそ \\
+たたたたたたたたたたたたたたたたた \\
+ちちちちちちちちちちちちちちちちち \\
+つつつつつつつつつつつつつつつつつ \\
+ててててててててててててててててて \\
+ととととととととととととととととと \\
+ななななななななななななななななな \\
+ににににににににににににににににに \\
+ぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬ \\
+ねねねねねねねねねねねねねねねねね \\
+ののののののののののののののののの \\
+ははははははははははははははははは \\
+ひひひひひひひひひひひひひひひひひ \\
+ふふふふふふふふふふふふふふふふふ \\
+へへへへへへへへへへへへへへへへへ \\
+ほほほほほほほほほほほほほほほほほ \\
+ままままままままままままままままま \\
+みみみみみみみみみみみみみみみみみ \\
+むむむむむむむむむむむむむむむむむ \\
+めめめめめめめめめめめめめめめめめ \\
+ももももももももももももももももも \\
+ややややややややややややややややや \\
+ゆゆゆゆゆゆゆゆゆゆゆゆゆゆゆゆゆ \\
+よよよよよよよよよよよよよよよよよ \\
+わわわわわわわわわわわわわわわわわ \\
+ををををををををををををををををを \\
+んんんんんんんんんんんんんんんんん \\
+あああああああああああああああああ \\
+いいいいいいいいいいいいいいいいい \\
+ううううううううううううううううう 
+
+\columnauthor{著者名(x\@for\_your\_sns\_account)}
+
+\clearpage
+
+
+% 冬コミ2024にてCS集会から初めての本が出版された。2冊発行されており、それぞれ「夜鍋ヨナ計算機科学」、「独奏　CS集会LT論評　1」というタイトルである。
+% \\
+% 「夜鍋ヨナ計算機科学」では、夜鍋ヨナ氏がCS集会にて4bitコンピューター設計をテーマにしたLTのスライド資料を編集したものである。当初1000Pを超えてしまいそうになり、急遽ページ数を削減して100Pに収め、10dBの低減を見せた。
+
+% 夏コミ2025もありがたく当選させていただいたので、新刊を出すことにした。今回は2名体制での執筆となる。誘ったら必ずOKを出すよいフレンドが居て助かった。このまま冬コミにも書いてもらおう。
+% さて、夏コミ2025の新刊は二人で執筆したため、前半と後半で異なる味わいになるはずである。そのあたりは読者も楽しみにしていただきたい。
+
+% \newpage
+
+\phantomsection
+\addcontentsline{toc}{section}{目次}
+
+
+% 目次
+\tableofcontents
+\clearpage
+
+
+\clearpage
+
+\sectstar{まえがき　著者名}
+ここに前書きを書く
+
+\columnauthor{著者名(x\@for\_your\_sns\_account)}
+\clearpage
+
+
+\section{第N章の名前}
+
+\begin{screen}
+    あればここにキャッチコピーを書く
+\end{screen}
+\newline
+
+ああああああああああああああああ \\
+いいいいいいいいいいいいいいいいい \\
+ううううううううううううううううう \\
+えええええええええええええええええ \\
+おおおおおおおおおおおおおおおおお \\
+かかかかかかかかかかかかかかかかか \\
+ききききききききききききききききき \\
+くくくくくくくくくくくくくくくくく \\
+けけけけけけけけけけけけけけけけけ \\
+こここここここここここここここここ \\
+さささささささささささささささささ \\
+ししししししししししししししししし \\
+すすすすすすすすすすすすすすすすす \\
+せせせせせせせせせせせせせせせせせ \\
+そそそそそそそそそそそそそそそそそ \\
+たたたたたたたたたたたたたたたたた \\
+ちちちちちちちちちちちちちちちちち \\
+つつつつつつつつつつつつつつつつつ \\
+ててててててててててててててててて \\
+ととととととととととととととととと \\
+ななななななななななななななななな \\
+ににににににににににににににににに \\
+ぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬぬ \\
+ねねねねねねねねねねねねねねねねね \\
+ののののののののののののののののの \\
+ははははははははははははははははは \\
+ひひひひひひひひひひひひひひひひひ \\
+ふふふふふふふふふふふふふふふふふ \\
+へへへへへへへへへへへへへへへへへ \\
+ほほほほほほほほほほほほほほほほほ \\
+ままままままままままままままままま \\
+みみみみみみみみみみみみみみみみみ \\
+むむむむむむむむむむむむむむむむむ \\
+めめめめめめめめめめめめめめめめめ \\
+ももももももももももももももももも \\
+ややややややややややややややややや \\
+ゆゆゆゆゆゆゆゆゆゆゆゆゆゆゆゆゆ \\
+よよよよよよよよよよよよよよよよよ \\
+わわわわわわわわわわわわわわわわわ \\
+ををををををををををををををををを \\
+んんんんんんんんんんんんんんんんん \\
+あああああああああああああああああ \\
+いいいいいいいいいいいいいいいいい \\
+ううううううううううううううううう \\
+えええええええええええええええええ \\
+おおおおおおおおおおおおおおおおお \\
+かかかかかかかかかかかかかかかかか \\
+ききききききききききききききききき \\
+くくくくくくくくくくくくくくくくく \\
+けけけけけけけけけけけけけけけけけ \\
+こここここここここここここここここ \\
+さささささささささささささささささ \\
+54行*17文字=918文字/page(除コピー)
+\columnauthor{夜鍋ヨナ(twitter@yonabeyona)}
+
+\clearpage
+
+
+
+
+\sectstar{あとがき 著者名}
+\markright{あとがき 著者名}
+
+ここにあとがきを書く
+
+
+
+\columnauthor{夜鍋ヨナ(twitter@yonabeyona)}
+\clearpage
+
+
+\onecolumn  % 一段組に戻す
+\subsection*{CS集会について}
+\markright{CS集会について}
+
+CS集会では、コンピューターサイエンスを中心とした、VRChat上の技術学術交流コミュニティです。
+VRChat上で隔週火曜日に開催され、コンピューターにまつわる様々な分野の研究者・エンジニア・学生が集まり、知識の共有と交流を行っています。
+
+\subsection*{活動内容}
+CS集会では毎回のLTセッションを設けています。毎週誰かが登壇して面白いテーマの発表が聞けます。
+発表の後は質疑応答や、より深堀りした内容の雑談・討論をしている様子が散見されます。
+
+\subsection*{参加について}
+参加は基本的に自由です。VRChatアカウントがあれば、どなたでもご参加いただけます。
+開催情報は技術学術イベントHubで確認できます。 \url{https://vrc-ta-hub.com/community/11/}
+
+\subsection*{過去の活動実績 $\cdot$ 今後の展望}
+これまでに数多くのLTが行われ、コンピューターサイエンスはもちろん、光学、物理学、コンパイラ、果てにはゲームボーイなど
+幅広い分野の発表が行われてきました。
+\\
+CS集会は「すべての学問はコンピューターサイエンスとつながりがある」という理念のもと、
+分野を超えた知識交流の場として発展を続けます。
+新たな参加者、発表者を常に歓迎しています。一緒に学術コミュニティを盛り上げていきましょう。
+\\
+興味をお持ちの方は、ぜひご参加下さい。
+
+
+\newpage
+
+\thispagestyle{empty}
+
+
+% \begin{figure}[htbp]
+%   \centering
+%   % \linewidth ≒ \textwidth（単カラムの場合）。どちらでも OK
+%   \makebox[\textwidth][c]{%
+%     \includegraphics[width=1.2\textwidth]{image/Hub.eps}}
+%   \caption{技術・学術系イベント Hub}
+
+%   % \linewidth ≒ \textwidth（単カラムの場合）。どちらでも OK
+%   \makebox[\textwidth][c]{%
+%     \includegraphics[width=0.28\textwidth]{image/QR_100874.eps}}
+%   \caption{https://vrc-ta-hub.com/}
+% \end{figure}
+
+
+
+\newpage
+
+
+% ↓ このページだけ段落頭を 0pt
+\begingroup
+
+  \setlength{\parindent}{0pt}
+
+  % 奥付を「章見出し（番号なし）」として定義し、目つぎに追加
+  \phantomsection
+  \addcontentsline{toc}{section}{著者紹介・奥付}
+  \markright{著者紹介・奥付}
+
+
+% 〜著者紹介ページの本文〜
+著者紹介
+
+% ── 夜鍋ヨナ ────────────────────────────────
+{\bfseries 著者名(x@for\_your\_sns\_account)}\par      % ← \section を使わず普通の太字文字列
+著者名の紹介文を書く
+
+
+
+
+\vspace{1em}
+\noindent\rule{\linewidth}{0.4pt}  % ← もう 1 本区切り線
+
+\TabPositions{2em, 4em, 5em, 6em} % タブ位置を指定（任意）
+
+タイトル \tabto{5em} ：本のタイトル \tabto{20em} 本のサブタイトル \\
+\tabto{20em} 第N版 第M刷
+
+発行日 \tabto{5 em} ：XXXX年MM月DD日 第N版 第M刷 発行
+
+著者 \tabto{5em} ：\columnauthor{著者名(x@for\_your\_sns\_account)}
+\tabto{5em} ：\columnauthor{著者名(x@for\_your\_sns\_account)}
+
+編集 \tabto{5em} ：夜鍋ヨナ(twitter@yonabeyona)
+
+連絡先 \tabto{5em} ：yonabeyona4747@gmail.com
+
+
+印刷所 \tabto{5em} ：株式会社○○印刷
+
+\noindent\rule{\linewidth}{0.4pt}  % ← もう 1 本区切り線
+
+\copyright YYYY 著者名 \copyright 2025 CS集会 \\
+本書は、著者の許可なく、転載・複写・販売・公衆送信(電子媒体含む)、その他一切の無断転用を禁じます。
+\endgroup            % ← ここで元の \parindent に戻る
+
+
+%----裏表紙--------------------
+\clearpage              % 直前のページを終わらせる
+% \printnote{(裏表紙)}
+\thispagestyle{empty}   % ヘッダ・フッタ（ページ番号）を消す
+\null                  % なにもない本文（高さ 0 の箱）
+
+
+\end{document}

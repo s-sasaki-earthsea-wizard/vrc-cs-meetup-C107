@@ -4,5 +4,9 @@
 # .vscode
 .vscode
 
-# PDF files
-*.pdf
+# PDF files in Markdown drafts
+articles/*.pdf
+
+# LaTeX Build files
+build/*
+!build/airi-youtube-live.pdf
