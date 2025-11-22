@@ -53,9 +53,6 @@
 \renewcommand{\figureautorefname}{図}
 \renewcommand{\tableautorefname}{表}
 
-% 絵文字対応
-\usepackage{twemojis}  % Twitter絵文字フォント
-\usepackage{bxcoloremoji}  % 絵文字をLaTeXで使うためのパッケージ
 \usepackage{ascmac}
 
 % fancyhdr でヘッダー／フッターをカスタマイズ
@@ -103,9 +100,6 @@
 \usepackage{float}
 \usepackage{multirow}  % 表でセルを縦方向に結合するため
 \usepackage{array}     % 表の行間調整（\extrarowheight）のため
-
-% graphicxはtwemojisが既に読み込んでいるため、ここでは読み込まない
-% documentclassにdvipdfmxオプションを指定済み
 
 \usepackage[export]{adjustbox}  % プリアンブルに追加（まだなら）
 \jlreqsetup{caption_align={center}} % {center,*left} とすると長い場合のみ左寄せ
@@ -210,7 +204,7 @@ TBA
 \clearpage
 
 
-\section{Discord Botに個性を持たせる}
+\section{AI VTuberの個性をRAGで構築する - ソーシャルメディア投稿のナレッジDB化}
 
 \begin{screen}
   この記事は、「Discordの発言履歴をナレッジDBに登録して、AI VTuberに個性を持たせる」というプロジェクトの記録です。
@@ -300,19 +294,19 @@ Neuro-sama\footnote{\url{https://www.twitch.tv/vedal987}}のようにゲーム�
   \item \textbf{RAGによって知識やキャラクター設定に沿った応答}を生成（音声合成でリアルタイムに返答）
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure*}[h]
   \centering
-  \includegraphics[width=0.9\columnwidth]{images/aivtuber-streaming-screenshot.png}
+  \includegraphics[width=0.85\textwidth]{images/aivtuber-streaming-screenshot.png}
   \caption{実際の配信画面 - アバターが視聴者のコメントに応答している様子}
   \label{fig:streaming-screenshot}
-\end{figure}
+\end{figure*}
 
 \subsubsection{RAGで検索された知識を用いた応答の実例}
 
 ここでは、実際のナレッジDBに登録されている発言を使って、知識やキャラクターに沿った応答をする具体例を紹介します。
 
 実際の配信でリスナー(友人に配信に参加してもらいました)が「\textbf{レ・ミゼラブルは好きですか？}」とコメントしました。このとき、データベースには「レ・ミゼラブル」に関する記録は一切ありませんでした\footnote{筆者自身は実際には好きに語らせたら一晩ずっとレミゼの話をできるくらいの厄介なレミゼオタクです。}。
-なので、最初は「あまり詳しくない」という前置きから始まります\footnote{本システムでは、ナレッジDBに存在しない知識については「知らない」と正直に答えさせるシステムプロンプトを与えています。これにより、LLMが架空の体験を捏造してキャラクターの一貫性を損なうことを防いでいます。}：
+なので、最初は「あまり詳しくない」という前置きから始まります\footnote{本システムでは、口調（フレンドリーな話し言葉）や基本的なプロフィール（職業や居住地など）をシステムプロンプトで定義しています。また、ナレッジDBに存在しない知識については「知らない」と正直に答えるよう指示しており、これによりLLMが架空の体験を捏造してキャラクターの一貫性を損なうことを防いでいます。詳細な趣味嗜好（宝塚、ポケモン等）はRAGで実現しています。}：
 
 \textbf{質問}: "レ・ミゼラブルは好きですか？"
 
@@ -443,7 +437,7 @@ Discord Botがメッセージを自動収集し（ただしリアルタイム収
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.85\textwidth]{images/ai-vtuber-system-architecture.pdf}
+  \includegraphics[width=0.9\textwidth]{images/ai-vtuber-system-architecture.pdf}
   \caption{AI VTuberシステムアーキテクチャ - Discord収集からYouTube Live配信まで}
   \label{fig:system-architecture}
 \end{figure*}
