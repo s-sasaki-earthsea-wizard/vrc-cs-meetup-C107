@@ -49,6 +49,8 @@
 \usepackage[dvipdfmx,hidelinks]{hyperref}
 \usepackage{pxjahyper}  % 日本語しおり対応
 
+\usepackage{twemojis}
+
 % \autorefの日本語化
 \renewcommand{\figureautorefname}{図}
 \renewcommand{\tableautorefname}{表}
@@ -194,7 +196,7 @@ hogehoge \\
 
 \sectstar{まえがき：さめ（мег-сск）}
 
-TBA
+TBA \twemoji{smile}
 
 \begin{center}
   \includegraphics[width=0.9\columnwidth]{images/icon_circle.png}
@@ -559,9 +561,9 @@ Discord等のソーシャルメディアの投稿を自身の記憶のように�
 \textbf{実際の検索結果}（類似度順）:
 
 \begin{enumerate}
-  \item [46.2\%] 好きな漫画のひとつは「北斗の拳」！〜好きなキャラはトキ！ ← ❌ 無関係だが類似度高い。「トキ」を鳥の朱鷺と勘違いしている？
-  \item [45.9\%] ポケモンのダブルバトルが面白い ← △ 微妙（架空の生き物）
-  \item [42.2\%] 実家には犬がいる。16歳のヨークシャーテリア ← ✅ 本命だが3位
+  \item [46.2\%] 好きな漫画のひとつは「北斗の拳」！〜好きなキャラはトキ！ ← \twemoji{cross mark} 無関係だが類似度高い。「トキ」を鳥の朱鷺と勘違いしている？
+  \item [45.9\%] ポケモンのダブルバトルが面白い ← \twemoji{thinking face} 微妙（架空の生き物）
+  \item [42.2\%] 実家には犬がいる。16歳のヨークシャーテリア ← \twemoji{white_check_mark} 本命だが3位
 \end{enumerate}
 
 「北斗の拳」（トキ等のキャラクター名）や「ポケモン」（架空の生き物）の方が、実際のペットである「犬」よりも類似度が高くなってしまいました。
@@ -581,18 +583,18 @@ Discord等のソーシャルメディアの投稿を自身の記憶のように�
 ベクトル検索（セマンティック検索）は、従来のキーワード検索と比べて以下の点で優れています：
 
 \begin{itemize}
-  \item ✅ 形態素解析不要 (文字列の分割)
-  \item ✅ 同義語に対応（"ポケモン" = "Pokémon"）
-  \item ✅ 意味的な関連性を捉える
-  \item ✅ 多言語対応
+  \item \twemoji{white_check_mark} 形態素解析不要 (文字列の分割)
+  \item \twemoji{white_check_mark} 同義語に対応（"ポケモン" = "Pokémon"）
+  \item \twemoji{white_check_mark} 意味的な関連性を捉える
+  \item \twemoji{white_check_mark} 多言語対応
 \end{itemize}
 
 しかし、以下の課題があります：
 
 \begin{itemize}
-  \item ❌ 文脈を考慮しない（架空と現実の区別がつかない）
-  \item ❌ ユーザーの意図を理解できない（ペットの話を聞きたいのか、キャラクターの話を聞きたいのか）
-  \item ❌ 類似度スコアの絶対値に意味がない（46.2\%と42.2\%の差が重要かは文脈次第）
+  \item \twemoji{cross mark} 文脈を考慮しない（架空と現実の区別がつかない）
+  \item \twemoji{cross mark} ユーザーの意図を理解できない（ペットの話を聞きたいのか、キャラクターの話を聞きたいのか）
+  \item \twemoji{cross mark} 類似度スコアの絶対値に意味がない（46.2\%と42.2\%の差が重要かは文脈次第）
 \end{itemize}
 
 単純にベクトルの距離だけで判断すると、「トキ（北斗の拳のキャラクター）」と「動物」の意味的な近さが、「犬」と「動物」よりも高く評価されてしまうのです。
